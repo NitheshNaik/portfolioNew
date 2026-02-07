@@ -9,7 +9,7 @@ const ParticleBackground = ({ isDark }) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    
+
     const ctx = canvas.getContext('2d');
     let animationFrameId;
     let particles = [];
@@ -42,7 +42,7 @@ const ParticleBackground = ({ isDark }) => {
       }
 
       draw() {
-        ctx.fillStyle = isDark 
+        ctx.fillStyle = isDark
           ? `rgba(96, 165, 250, ${this.opacity})`
           : `rgba(59, 130, 246, ${this.opacity})`;
         ctx.beginPath();
@@ -61,7 +61,7 @@ const ParticleBackground = ({ isDark }) => {
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
+
       particles.forEach(particle => {
         particle.update();
         particle.draw();
@@ -75,7 +75,7 @@ const ParticleBackground = ({ isDark }) => {
           const distance = Math.sqrt(dx * dx + dy * dy);
 
           if (distance < 120) {
-            ctx.strokeStyle = isDark 
+            ctx.strokeStyle = isDark
               ? `rgba(96, 165, 250, ${0.15 * (1 - distance / 120)})`
               : `rgba(59, 130, 246, ${0.1 * (1 - distance / 120)})`;
             ctx.lineWidth = 0.5;
@@ -151,12 +151,18 @@ const TiltCard = ({ children, className }) => {
 // --- MAIN APP ---
 const App = () => {
   const [isDark, setIsDark] = useState(true);
+
+  const clickSound = new Audio("/click.mp3");
+
   const backgroundRef = useRef(null);
   const isBackgroundInView = useInView(backgroundRef, { once: false, amount: 0.2 });
 
   const { scrollYProgress } = useScroll();
   const heroY = useScrollTransform(scrollYProgress, [0, 0.3], [0, -100]);
   const heroOpacity = useScrollTransform(scrollYProgress, [0, 0.3], [1, 0]);
+
+
+
 
   const projects = [
     {
@@ -186,9 +192,11 @@ const App = () => {
   const bgClass = isDark ? 'bg-[#030712]' : 'bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50';
   const textClass = isDark ? 'text-white' : 'text-slate-900';
   const mutedTextClass = isDark ? 'text-slate-400' : 'text-slate-600';
-  const glassClass = isDark 
-    ? 'bg-white/5 backdrop-blur-md border border-white/10' 
+  const glassClass = isDark
+    ? 'bg-white/5 backdrop-blur-md border border-white/10'
     : 'bg-white/70 backdrop-blur-md border border-white/40 shadow-lg';
+
+
 
   return (
     <div className={`min-h-screen selection:bg-blue-500/30 pb-20 transition-colors duration-500 ${bgClass} ${textClass} relative`}>
@@ -197,9 +205,9 @@ const App = () => {
 
       {/* Gradient Overlay */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className={`absolute inset-0 ${isDark 
-          ? 'bg-gradient-to-br from-blue-900/10 via-transparent to-purple-900/10' 
-          : 'bg-gradient-to-br from-blue-100/30 via-transparent to-purple-100/30'}`} 
+        <div className={`absolute inset-0 ${isDark
+          ? 'bg-gradient-to-br from-blue-900/10 via-transparent to-purple-900/10'
+          : 'bg-gradient-to-br from-blue-100/30 via-transparent to-purple-100/30'}`}
         />
       </div>
 
@@ -214,7 +222,12 @@ const App = () => {
               <a href="#contact" className={`${mutedTextClass} hover:text-blue-500 transition`}>Contact</a>
             </div>
             <button
-              onClick={() => setIsDark(!isDark)}
+              onClick={() => {
+                clickSound.currentTime = 0;
+                clickSound.play();
+                setIsDark(!isDark);
+              }}
+
               className={`p-2 rounded-lg ${glassClass} hover:bg-white/10 transition-all`}
               aria-label="Toggle theme"
             >
@@ -225,16 +238,16 @@ const App = () => {
       </nav>
 
       {/* Hero Section with Parallax */}
-      <motion.section 
+      <motion.section
         style={{ y: heroY, opacity: heroOpacity }}
         className="min-h-screen flex flex-col justify-center items-center px-6 text-center relative z-10"
       >
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} 
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <motion.h1 
+          <motion.h1
             className="text-5xl sm:text-6xl md:text-8xl font-black tracking-tighter mb-6"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -245,7 +258,7 @@ const App = () => {
               {" "}NITHESH
             </span>
           </motion.h1>
-          <motion.p 
+          <motion.p
             className={`${mutedTextClass} text-base sm:text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -253,7 +266,7 @@ const App = () => {
           >
             A full-stack developer passionate about crafting bold and innovative solutions.
           </motion.p>
-          <motion.div 
+          <motion.div
             className="flex flex-col sm:flex-row gap-4 justify-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -271,7 +284,7 @@ const App = () => {
 
       {/* About Me Section */}
       <section id="about" className="py-20 md:py-32 px-6 relative z-10">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -282,13 +295,13 @@ const App = () => {
             About <span className={isDark ? "text-blue-500" : "text-blue-600"}>Me</span>
           </h2>
           <p className={`${mutedTextClass} text-lg sm:text-xl md:text-2xl leading-relaxed mb-8 md:mb-12 font-light`}>
-            With over 2 years of experience in building websites, I specialize in 
-            <span className={`${textClass} font-medium`}> branding, web design, and user experience</span>. 
-            I love collaborating with businesses that want to stand out and showcase their best side. 
+            With over 2 years of experience in building websites, I specialize in
+            <span className={`${textClass} font-medium`}> branding, web design, and user experience</span>.
+            I love collaborating with businesses that want to stand out and showcase their best side.
             Let's create something amazing together!
           </p>
-          <a 
-            href="#contact" 
+          <a
+            href="#contact"
             className={`inline-flex items-center gap-2 ${isDark ? 'text-blue-400' : 'text-blue-600'} font-mono uppercase tracking-[0.2em] hover:opacity-70 transition group text-sm md:text-base`}
           >
             Contact Me <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
@@ -301,12 +314,12 @@ const App = () => {
         <h2 className={`text-xs md:text-sm font-mono uppercase tracking-[0.3em] md:tracking-[0.5em] ${isDark ? 'text-blue-400' : 'text-blue-600'} mb-12 md:mb-16 text-center`}>
           My Background
         </h2>
-        
+
         <div className="grid md:grid-cols-3 gap-6 auto-rows-fr">
-          
+
           {/* Experience Card (From Left) */}
           <TiltCard className="h-full">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: -100 }}
               animate={isBackgroundInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -100 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
@@ -318,7 +331,7 @@ const App = () => {
                 <h4 className={`${isDark ? 'text-slate-200' : 'text-slate-800'} font-semibold text-sm`}>Project Intern</h4>
                 <p className={`${mutedTextClass} text-xs mb-3`}>VTU Xcelerator</p>
                 <p className={`${mutedTextClass} text-xs leading-relaxed`}>
-                  Contributed to the <span className={isDark ? 'text-slate-200' : 'text-slate-800'}>"Incredible Karnataka"</span> project, 
+                  Contributed to the <span className={isDark ? 'text-slate-200' : 'text-slate-800'}>"Incredible Karnataka"</span> project,
                   developing a platform to discover and promote underrated, secret places in Karnataka.
                 </p>
               </div>
@@ -327,7 +340,7 @@ const App = () => {
 
           {/* Education Card (From Bottom) */}
           <TiltCard className="h-full">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 100 }}
               animate={isBackgroundInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 100 }}
               transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
@@ -352,7 +365,7 @@ const App = () => {
 
           {/* Skills Card (From Right) */}
           <TiltCard className="h-full">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: 100 }}
               animate={isBackgroundInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 100 }}
               transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
@@ -384,23 +397,24 @@ const App = () => {
         <h2 className={`text-xs md:text-sm font-mono uppercase tracking-[0.3em] md:tracking-[0.5em] ${isDark ? 'text-blue-400' : 'text-blue-600'} mb-20 text-center`}>
           Selected Projects
         </h2>
-        
+
         {projects.map((p, i) => (
-          <div 
-            key={i} 
-            className="sticky" 
-            style={{ top: `${100 + (i * 40)}px` }} 
+          <div
+            key={i}
+            className="sticky"
+            style={{ top: `${100 + (i * 40)}px` }}
           >
-            <motion.div 
+            <motion.div
+
               whileHover={{ scale: 0.98 }}
-              className={`${glassClass} rounded-3xl md:rounded-[2.5rem] overflow-hidden grid md:grid-cols-2 min-h-[400px] md:min-h-[450px]`}
+              className={`${glassClass} rounded-3xl md:rounded-[2.5rem] overflow-hidden grid md:grid-cols-2 min-h-[400px] md:min-h-[450px] project-card`}
             >
               {/* Image Side */}
               <div className="relative h-64 md:h-auto overflow-hidden">
-                <img 
-                  src={p.image} 
-                  alt={p.title} 
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-110" 
+                <img
+                  src={p.image}
+                  alt={p.title}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-110"
                 />
                 <div className={`absolute inset-0 ${isDark ? 'bg-gradient-to-t from-[#030712]' : 'bg-gradient-to-t from-white'} via-transparent to-transparent opacity-60`}></div>
               </div>
@@ -424,8 +438,8 @@ const App = () => {
 
                 <div className="flex flex-wrap gap-2">
                   {p.tech.map(t => (
-                    <span 
-                      key={t} 
+                    <span
+                      key={t}
                       className={`text-[10px] font-mono uppercase tracking-widest ${isDark ? 'bg-white/5 border-white/5 text-slate-300' : 'bg-slate-100 border-slate-200 text-slate-700'} px-3 md:px-4 py-2 rounded-full border`}
                     >
                       {t}
@@ -440,7 +454,7 @@ const App = () => {
 
       {/* Footer / Contact */}
       <footer id="contact" className="pt-20 md:pt-40 pb-20 text-center px-6 relative z-10">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
