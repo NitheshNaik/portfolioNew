@@ -121,6 +121,16 @@ const ProjectModal = ({ project, isOpen, onClose, isDark }) => {
     };
   }, [isOpen]);
 
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+
+    if (isOpen) window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [isOpen, onClose]);
+
+
   if (!isOpen || !project) return null;
 
   const textClass = isDark ? 'text-white' : 'text-slate-900';
@@ -388,7 +398,13 @@ const App = () => {
     : 'bg-white/70 backdrop-blur-md border border-white/40 shadow-lg';
 
   return (
-    <div className={`min-h-screen selection:bg-blue-500/30 pb-20 transition-colors duration-500 ${bgClass} ${textClass} relative`}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      className={`min-h-screen selection:bg-blue-500/30 pb-20 transition-colors duration-500 ${bgClass} ${textClass} relative`}
+    >
+
       {/* Animated Background */}
       <ParticleBackground isDark={isDark} />
 
@@ -700,7 +716,7 @@ const App = () => {
           animation: gradient 3s ease infinite;
         }
       `}</style>
-    </div>
+    </motion.div>
   );
 };
 
