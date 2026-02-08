@@ -108,6 +108,150 @@ const ParticleBackground = ({ isDark }) => {
   );
 };
 
+// --- PROJECT MODAL ---
+const ProjectModal = ({ project, isOpen, onClose, isDark }) => {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  if (!isOpen || !project) return null;
+
+  const textClass = isDark ? 'text-white' : 'text-slate-900';
+  const mutedTextClass = isDark ? 'text-slate-400' : 'text-slate-600';
+  const glassClass = isDark
+    ? 'bg-white/5 backdrop-blur-md border border-white/10'
+    : 'bg-white/70 backdrop-blur-md border border-white/40 shadow-lg';
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-6"
+      style={{
+        backgroundColor: isDark ? 'rgba(3, 7, 18, 0.9)' : 'rgba(0, 0, 0, 0.6)',
+        backdropFilter: 'blur(8px)'
+      }}
+    >
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.9, opacity: 0, y: 20 }}
+        transition={{ type: "spring", damping: 25, stiffness: 300 }}
+        onClick={(e) => e.stopPropagation()}
+        className={`${glassClass} rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative`}
+      >
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className={`absolute top-4 right-4 z-10 p-2 rounded-full ${glassClass} hover:bg-white/10 transition-all`}
+          aria-label="Close modal"
+        >
+          <ExternalLink size={20} className="rotate-45" />
+        </button>
+
+        {/* Project Image */}
+        <div className="relative h-64 md:h-96 w-full overflow-hidden rounded-t-3xl">
+          <img
+            src={project.image}
+            alt={project.title}
+            className="w-full h-full object-cover"
+          />
+          <div className={`absolute inset-0 ${isDark ? 'bg-gradient-to-t from-[#030712]' : 'bg-gradient-to-t from-white'} via-transparent to-transparent opacity-60`}></div>
+        </div>
+
+        {/* Content */}
+        <div className="p-6 md:p-10">
+          {/* Icon & Title */}
+          <div className="flex items-start gap-4 mb-6">
+            <div className={`p-4 ${isDark ? 'bg-white/5' : 'bg-slate-100'} rounded-2xl border ${isDark ? 'border-white/10' : 'border-slate-200'}`}>
+              {project.icon}
+            </div>
+            <div className="flex-1">
+              <h2 className={`text-3xl md:text-4xl font-bold ${textClass} mb-2 tracking-tight`}>
+                {project.title}
+              </h2>
+              <div className="flex flex-wrap gap-2 mt-3">
+                {project.tech.map(t => (
+                  <span
+                    key={t}
+                    className={`text-[10px] font-mono uppercase tracking-widest ${isDark ? 'bg-white/5 border-white/5 text-slate-300' : 'bg-slate-100 border-slate-200 text-slate-700'} px-4 py-2 rounded-full border`}
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Description */}
+          <div className="space-y-4">
+            <h3 className={`text-xl font-bold ${textClass}`}>About the Project</h3>
+            <p className={`${mutedTextClass} leading-relaxed text-base`}>
+              {project.desc}
+            </p>
+
+            {project.fullDescription && (
+              <p className={`${mutedTextClass} leading-relaxed text-base`}>
+                {project.fullDescription}
+              </p>
+            )}
+          </div>
+
+          {/* Key Features */}
+          {project.features && (
+            <div className="mt-8 space-y-4">
+              <h3 className={`text-xl font-bold ${textClass}`}>Key Features</h3>
+              <ul className="space-y-3">
+                {project.features.map((feature, idx) => (
+                  <li key={idx} className={`flex items-start gap-3 ${mutedTextClass}`}>
+                    <span className={`${isDark ? 'text-blue-400' : 'text-blue-600'} mt-1`}>✦</span>
+                    <span className="leading-relaxed">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Links */}
+          {(project.githubUrl || project.liveUrl) && (
+            <div className="mt-8 flex flex-wrap gap-4">
+              {project.githubUrl && (
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`${glassClass} px-6 py-3 rounded-xl flex items-center gap-2 hover:bg-white/10 transition`}
+                >
+                  <Github size={18} /> View Code
+                </a>
+              )}
+              {project.liveUrl && (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`${isDark ? 'bg-blue-600 text-white' : 'bg-blue-600 text-white'} px-6 py-3 rounded-xl hover:bg-blue-500 transition shadow-lg ${isDark ? 'shadow-blue-500/20' : 'shadow-blue-600/30'} flex items-center gap-2`}
+                >
+                  <ExternalLink size={18} /> Live Demo
+                </a>
+              )}
+            </div>
+          )}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 
 
 // --- TILT WRAPPER ---
@@ -151,9 +295,10 @@ const TiltCard = ({ children, className }) => {
 // --- MAIN APP ---
 const App = () => {
   const [isDark, setIsDark] = useState(true);
-
   const clickSound = new Audio("/click.mp3");
 
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const backgroundRef = useRef(null);
   const isBackgroundInView = useInView(backgroundRef, { once: false, amount: 0.2 });
 
@@ -161,30 +306,66 @@ const App = () => {
   const heroY = useScrollTransform(scrollYProgress, [0, 0.3], [0, -100]);
   const heroOpacity = useScrollTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
+  const openModal = (project) => {
+    setSelectedProject(project);
+    setIsModalOpen(true);
+  };
 
-
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setTimeout(() => setSelectedProject(null), 300);
+  };
 
   const projects = [
     {
       title: "SafeHer",
       tech: ["React", "Node.js", "MongoDB"],
       desc: "A unified platform for women's safety and wellness. Features real-time SOS messaging and health awareness tools.",
+      fullDescription: "SafeHer is a comprehensive safety platform designed to empower women with real-time emergency features and health resources. Built with modern web technologies, it provides instant SOS alerts, location tracking, and a supportive community network.",
       image: "https://images.unsplash.com/photo-1573163715152-498477df6a58?auto=format&fit=crop&q=80&w=1000",
-      icon: <Shield className={isDark ? "text-blue-400" : "text-blue-600"} />
+      icon: <Shield className={isDark ? "text-blue-400" : "text-blue-600"} />,
+      features: [
+        "Real-time SOS messaging with GPS location sharing",
+        "Emergency contact management and auto-notifications",
+        "Health awareness resources and wellness tracking",
+        "Community support forum with privacy controls",
+        "Secure authentication and data encryption"
+      ],
+      githubUrl: "https://github.com/NitheshNaik",
+      liveUrl: "#"
     },
     {
       title: "Event Management System",
       tech: ["Node.js", "MySQL", "EJS"],
       desc: "Full-stack scoring platform managing 1000+ students with real-time dashboards for admin and judges.",
+      fullDescription: "A comprehensive event management platform built to handle large-scale competitions with multiple judges and real-time scoring capabilities. Streamlines the entire event workflow from registration to final results.",
       image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&q=80&w=1000",
-      icon: <Zap className={isDark ? "text-purple-400" : "text-purple-600"} />
+      icon: <Zap className={isDark ? "text-purple-400" : "text-purple-600"} />,
+      features: [
+        "Real-time scoring system with live leaderboards",
+        "Multi-role authentication (Admin, Judge, Participant)",
+        "Automated result calculation and ranking",
+        "PDF certificate generation for winners",
+        "Database optimization for 1000+ concurrent users"
+      ],
+      githubUrl: "https://github.com/NitheshNaik",
+      liveUrl: "#"
     },
     {
       title: "IBM Hackathon Project",
       tech: ["Java", "DSA", "Algorithms"],
       desc: "Developed high-performance algorithms for complex data processing during the IBM National Hackathon finals.",
+      fullDescription: "An innovative algorithmic solution developed for IBM's National Hackathon that optimizes large-scale data processing. Implemented advanced data structures and algorithms to achieve significant performance improvements.",
       image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1000",
-      icon: <Code2 className={isDark ? "text-green-400" : "text-green-600"} />
+      icon: <Code2 className={isDark ? "text-green-400" : "text-green-600"} />,
+      features: [
+        "Custom data structures for efficient data handling",
+        "Optimized algorithms reducing processing time by 60%",
+        "Memory-efficient solution for big data scenarios",
+        "Comprehensive testing suite with edge case coverage",
+        "Finalist in IBM National Hackathon 2024"
+      ],
+      githubUrl: "https://github.com/NitheshNaik"
     }
   ];
 
@@ -195,8 +376,6 @@ const App = () => {
   const glassClass = isDark
     ? 'bg-white/5 backdrop-blur-md border border-white/10'
     : 'bg-white/70 backdrop-blur-md border border-white/40 shadow-lg';
-
-
 
   return (
     <div className={`min-h-screen selection:bg-blue-500/30 pb-20 transition-colors duration-500 ${bgClass} ${textClass} relative`}>
@@ -210,6 +389,14 @@ const App = () => {
           : 'bg-gradient-to-br from-blue-100/30 via-transparent to-purple-100/30'}`}
         />
       </div>
+
+      {/* Project Modal */}
+      <ProjectModal
+        project={selectedProject}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        isDark={isDark}
+      />
 
       {/* Glass Navbar */}
       <nav className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-[100] w-[95%] md:w-[90%] max-w-4xl">
@@ -405,9 +592,9 @@ const App = () => {
             style={{ top: `${175 + (i * 40)}px` }}
           >
             <motion.div
-
               whileHover={{ scale: 0.98 }}
-              className={`${glassClass} rounded-3xl md:rounded-[2.5rem] overflow-hidden grid md:grid-cols-2 min-h-[400px] md:min-h-[450px] project-card`}
+              onClick={() => openModal(p)}
+              className={`${glassClass} rounded-3xl md:rounded-[2.5rem] overflow-hidden grid md:grid-cols-2 min-h-[400px] md:min-h-[450px] cursor-pointer`}
             >
               {/* Image Side */}
               <div className="relative h-64 md:h-auto overflow-hidden">
@@ -426,9 +613,9 @@ const App = () => {
                     <div className={`p-3 ${isDark ? 'bg-white/5' : 'bg-slate-100'} rounded-2xl border ${isDark ? 'border-white/10' : 'border-slate-200'}`}>
                       {p.icon}
                     </div>
-                    <a href="#" className={`${mutedTextClass} hover:opacity-70 transition`} aria-label={`View ${p.title} project`}>
+                    <div className={`p-2 ${mutedTextClass} hover:opacity-70 transition`} aria-label={`View ${p.title} project details`}>
                       <ExternalLink size={20} />
-                    </a>
+                    </div>
                   </div>
                   <h3 className={`text-2xl md:text-3xl font-bold ${textClass} mb-4 tracking-tight`}>{p.title}</h3>
                   <p className={`${mutedTextClass} leading-relaxed mb-6 md:mb-8 text-sm md:text-base`}>
