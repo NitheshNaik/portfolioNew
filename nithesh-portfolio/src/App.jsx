@@ -296,6 +296,8 @@ const TiltCard = ({ children, className }) => {
 const App = () => {
   const [isDark, setIsDark] = useState(true);
   const clickSound = new Audio("/click.mp3");
+  const popupSound = useRef(null);
+
 
   const [selectedProject, setSelectedProject] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -307,14 +309,26 @@ const App = () => {
   const heroOpacity = useScrollTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
   const openModal = (project) => {
-    setSelectedProject(project);
-    setIsModalOpen(true);
-  };
+  // Play popup sound
+  if (popupSound.current) {
+    popupSound.current.currentTime = 0;
+    popupSound.current.play();
+  }
+
+  setSelectedProject(project);
+  setIsModalOpen(true);
+};
 
   const closeModal = () => {
     setIsModalOpen(false);
     setTimeout(() => setSelectedProject(null), 300);
   };
+
+  useEffect(() => {
+  popupSound.current = new Audio("/popup.mp3");
+  popupSound.current.volume = 0.45; // soft UI sound
+}, []);
+
 
   const projects = [
     {
