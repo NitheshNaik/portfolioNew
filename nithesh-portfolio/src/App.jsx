@@ -402,7 +402,7 @@ const App = () => {
           <div
             key={i}
             className="sticky"
-            style={{ top: `${100 + (i * 40)}px` }}
+            style={{ top: `${175 + (i * 40)}px` }}
           >
             <motion.div
 
