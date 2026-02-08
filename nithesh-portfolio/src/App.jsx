@@ -252,8 +252,6 @@ const ProjectModal = ({ project, isOpen, onClose, isDark }) => {
   );
 };
 
-
-
 // --- TILT WRAPPER ---
 const TiltCard = ({ children, className }) => {
   const x = useMotionValue(0);
@@ -298,7 +296,6 @@ const App = () => {
   const clickSound = new Audio("/click.mp3");
   const popupSound = useRef(null);
 
-
   const [selectedProject, setSelectedProject] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const backgroundRef = useRef(null);
@@ -309,15 +306,15 @@ const App = () => {
   const heroOpacity = useScrollTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
   const openModal = (project) => {
-  // Play popup sound
-  if (popupSound.current) {
-    popupSound.current.currentTime = 0;
-    popupSound.current.play();
-  }
+    // Play popup sound
+    if (popupSound.current) {
+      popupSound.current.currentTime = 0;
+      popupSound.current.play();
+    }
 
-  setSelectedProject(project);
-  setIsModalOpen(true);
-};
+    setSelectedProject(project);
+    setIsModalOpen(true);
+  };
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -325,10 +322,9 @@ const App = () => {
   };
 
   useEffect(() => {
-  popupSound.current = new Audio("/popup.mp3");
-  popupSound.current.volume = 0.45; // soft UI sound
-}, []);
-
+    popupSound.current = new Audio("/popup.mp3");
+    popupSound.current.volume = 0.45; // soft UI sound
+  }, []);
 
   const projects = [
     {
@@ -428,7 +424,6 @@ const App = () => {
                 clickSound.play();
                 setIsDark(!isDark);
               }}
-
               className={`p-2 rounded-lg ${glassClass} hover:bg-white/10 transition-all`}
               aria-label="Toggle theme"
             >
@@ -523,15 +518,15 @@ const App = () => {
             <motion.div
               initial={{ opacity: 0, x: -100 }}
               animate={isBackgroundInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -100 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+              transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
               className={`${glassClass} p-6 md:p-8 rounded-3xl h-full flex flex-col`}
             >
-              <Briefcase className={isDark ? "text-green-400" : "text-green-600"} size={32} />
-              <h3 className={`text-xl font-bold ${textClass} my-6`}>Experience</h3>
+              <Briefcase className={isDark ? "text-green-400" : "text-green-600"} size={36} />
+              <h3 className={`text-2xl font-bold ${textClass} my-6`}>Experience</h3>
               <div className="flex-1">
-                <h4 className={`${isDark ? 'text-slate-200' : 'text-slate-800'} font-semibold text-sm`}>Project Intern</h4>
-                <p className={`${mutedTextClass} text-xs mb-3`}>VTU Xcelerator</p>
-                <p className={`${mutedTextClass} text-xs leading-relaxed`}>
+                <h4 className={`${isDark ? 'text-slate-200' : 'text-slate-800'} font-semibold text-base`}>Project Intern</h4>
+                <p className={`${mutedTextClass} text-sm mb-3`}>VTU Xcelerator</p>
+                <p className={`${mutedTextClass} text-sm leading-relaxed`}>
                   Contributed to the <span className={isDark ? 'text-slate-200' : 'text-slate-800'}>"Incredible Karnataka"</span> project,
                   developing a platform to discover and promote underrated, secret places in Karnataka.
                 </p>
@@ -544,21 +539,21 @@ const App = () => {
             <motion.div
               initial={{ opacity: 0, y: 100 }}
               animate={isBackgroundInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 100 }}
-              transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+              transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1], delay: 0.15 }}
               className={`${glassClass} p-6 md:p-8 rounded-3xl h-full flex flex-col`}
             >
-              <BookOpen className={isDark ? "text-purple-400" : "text-purple-600"} size={32} />
-              <h3 className={`text-xl font-bold ${textClass} my-6`}>Education</h3>
+              <BookOpen className={isDark ? "text-purple-400" : "text-purple-600"} size={36} />
+              <h3 className={`text-2xl font-bold ${textClass} my-6`}>Education</h3>
               <div className="space-y-6 flex-1">
                 <div>
-                  <h4 className={`${isDark ? 'text-slate-200' : 'text-slate-800'} font-semibold text-sm`}>B.E. in Computer Science</h4>
-                  <p className={`${mutedTextClass} text-xs`}>Sambhram Institute of Technology</p>
-                  <p className={`${isDark ? 'text-blue-400' : 'text-blue-600'} font-mono text-xs mt-1`}>8.4 CGPA</p>
+                  <h4 className={`${isDark ? 'text-slate-200' : 'text-slate-800'} font-semibold text-base`}>B.E. in Computer Science</h4>
+                  <p className={`${mutedTextClass} text-sm`}>Sambhram Institute of Technology</p>
+                  <p className={`${isDark ? 'text-blue-400' : 'text-blue-600'} font-mono text-sm mt-1`}>8.4 CGPA</p>
                 </div>
                 <div>
-                  <h4 className={`${isDark ? 'text-slate-200' : 'text-slate-800'} font-semibold text-sm`}>Class XII (PUC)</h4>
-                  <p className={`${mutedTextClass} text-xs`}>M.E.S P.U College</p>
-                  <p className={`${isDark ? 'text-blue-400' : 'text-blue-600'} font-mono text-xs mt-1`}>82%</p>
+                  <h4 className={`${isDark ? 'text-slate-200' : 'text-slate-800'} font-semibold text-base`}>Class XII (PUC)</h4>
+                  <p className={`${mutedTextClass} text-sm`}>M.E.S P.U College</p>
+                  <p className={`${isDark ? 'text-blue-400' : 'text-blue-600'} font-mono text-sm mt-1`}>82%</p>
                 </div>
               </div>
             </motion.div>
@@ -569,23 +564,23 @@ const App = () => {
             <motion.div
               initial={{ opacity: 0, x: 100 }}
               animate={isBackgroundInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 100 }}
-              transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
+              transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1], delay: 0.3 }}
               className={`${glassClass} p-6 md:p-8 rounded-3xl h-full flex flex-col`}
             >
-              <Terminal className={isDark ? "text-blue-400" : "text-blue-600"} size={32} />
-              <h3 className={`text-xl font-bold ${textClass} my-6`}>Technical Skills</h3>
+              <Terminal className={isDark ? "text-blue-400" : "text-blue-600"} size={36} />
+              <h3 className={`text-2xl font-bold ${textClass} my-6`}>Technical Skills</h3>
               <div className="space-y-4 text-sm flex-1">
                 <div>
-                  <p className={`${isDark ? 'text-slate-500' : 'text-slate-600'} font-mono uppercase text-[10px] mb-1`}>Languages</p>
-                  <p className={isDark ? 'text-slate-300' : 'text-slate-700'}>Java, JavaScript, HTML/CSS, C, SQL, Python</p>
+                  <p className={`${isDark ? 'text-slate-500' : 'text-slate-600'} font-mono uppercase text-xs mb-2`}>Languages</p>
+                  <p className={`${isDark ? 'text-slate-300' : 'text-slate-700'} text-sm`}>Java, JavaScript, HTML/CSS, C, SQL, Python</p>
                 </div>
                 <div>
-                  <p className={`${isDark ? 'text-slate-500' : 'text-slate-600'} font-mono uppercase text-[10px] mb-1`}>Frameworks</p>
-                  <p className={isDark ? 'text-slate-300' : 'text-slate-700'}>Node.js, Express, React</p>
+                  <p className={`${isDark ? 'text-slate-500' : 'text-slate-600'} font-mono uppercase text-xs mb-2`}>Frameworks</p>
+                  <p className={`${isDark ? 'text-slate-300' : 'text-slate-700'} text-sm`}>Node.js, Express, React</p>
                 </div>
                 <div>
-                  <p className={`${isDark ? 'text-slate-500' : 'text-slate-600'} font-mono uppercase text-[10px] mb-1`}>Tools</p>
-                  <p className={isDark ? 'text-slate-300' : 'text-slate-700'}>VS Code, Eclipse, Git</p>
+                  <p className={`${isDark ? 'text-slate-500' : 'text-slate-600'} font-mono uppercase text-xs mb-2`}>Tools</p>
+                  <p className={`${isDark ? 'text-slate-300' : 'text-slate-700'} text-sm`}>VS Code, Eclipse, Git</p>
                 </div>
               </div>
             </motion.div>
@@ -685,7 +680,7 @@ const App = () => {
             </a>
           </div>
         </motion.div>
-        <p className={`mt-12 md:mt-20 ${isDark ? 'text-slate-700' : 'text-slate-400'} font-mono text-xs tracking-widest uppercase`}>
+        <p className={`mt-8 md:mt-12 ${isDark ? 'text-slate-700' : 'text-slate-400'} font-mono text-xs tracking-widest uppercase`}>
           Handcrafted by Nithesh • 2026
         </p>
       </footer>
