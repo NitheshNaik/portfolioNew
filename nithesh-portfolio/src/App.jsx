@@ -514,7 +514,7 @@ const App = () => {
       </motion.section>
 
       {/* About Me Section */}
-      <section id="about" className="py-20 md:py-32 px-6 relative z-10">
+      <section id="about" className="py-20 md:py-32 pb-32 md:pb-48 px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -541,7 +541,7 @@ const App = () => {
       </section>
 
       {/* My Background Section */}
-      <section ref={backgroundRef} className="py-20 px-6 max-w-6xl mx-auto overflow-x-hidden relative z-10">
+      <section ref={backgroundRef} className="pt-20 md:pt-32 py-20 px-6 max-w-6xl mx-auto overflow-x-hidden relative z-10">
         <h2 className={`text-xs md:text-sm font-mono uppercase tracking-[0.3em] md:tracking-[0.5em] ${isDark ? 'text-blue-400' : 'text-blue-600'} mb-12 md:mb-16 text-center`}>
           My Background
         </h2>
