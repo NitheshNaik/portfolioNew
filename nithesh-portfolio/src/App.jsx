@@ -440,7 +440,7 @@ const App = () => {
       {/* Glass Navbar */}
       <nav className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-[100] w-[95%] md:w-[90%] max-w-4xl">
         <div className={`${glassClass} rounded-2xl px-4 md:px-8 py-3 md:py-4 flex justify-between items-center`}>
-          <span className={`font-bold tracking-widest text-sm uppercase ${textClass}`}>Portfolio</span>
+          <a href="#" className={`font-bold tracking-widest text-sm uppercase ${textClass} hover:text-blue-500 transition cursor-pointer`}>Portfolio</a>
           <div className="flex gap-4 md:gap-8 items-center">
             <div className="hidden sm:flex gap-4 md:gap-8 text-xs font-mono uppercase tracking-widest">
               <a href="#about" className={`${mutedTextClass} hover:text-blue-500 transition`}>About</a>
@@ -514,7 +514,7 @@ const App = () => {
       </motion.section>
 
       {/* About Me Section */}
-      <section id="about" className="py-20 md:py-32 pb-32 md:pb-48 px-6 relative z-10">
+      <section id="about" className="pt-32 md:pt-48 pb-32 md:pb-48 px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -542,7 +542,7 @@ const App = () => {
 
       {/* My Background Section */}
       <section ref={backgroundRef} className="pt-20 md:pt-32 py-20 px-6 max-w-6xl mx-auto overflow-x-hidden relative z-10">
-        <h2 className={`text-xs md:text-sm font-mono uppercase tracking-[0.3em] md:tracking-[0.5em] ${isDark ? 'text-blue-400' : 'text-blue-600'} mb-12 md:mb-16 text-center`}>
+        <h2 className={`text-sm md:text-base font-mono uppercase tracking-[0.3em] md:tracking-[0.5em] ${isDark ? 'text-blue-400' : 'text-blue-600'} mb-12 md:mb-16 text-center`}>
           My Background
         </h2>
 
@@ -625,7 +625,7 @@ const App = () => {
 
       {/* Stacking Project Section */}
       <section id="work" className="px-6 max-w-4xl mx-auto space-y-20 py-20">
-        <h2 className={`text-xs md:text-sm font-mono uppercase tracking-[0.3em] md:tracking-[0.5em] ${isDark ? 'text-blue-400' : 'text-blue-600'} mb-20 text-center`}>
+        <h2 className={`text-sm md:text-base font-mono uppercase tracking-[0.3em] md:tracking-[0.5em] ${isDark ? 'text-blue-400' : 'text-blue-600'} mb-20 text-center`}>
           Selected Projects
         </h2>
 
