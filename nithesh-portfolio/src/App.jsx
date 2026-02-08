@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Github, Linkedin, Mail, ExternalLink, Shield, Zap, Download, Code2, ArrowRight, BookOpen, Briefcase, Terminal, Moon, Sun } from 'lucide-react';
-import { motion, useInView, useMotionValue, useSpring, useTransform, useScroll, useTransform as useScrollTransform } from 'framer-motion';
+import { motion, AnimatePresence, useInView, useMotionValue, useSpring, useTransform, useScroll, useTransform as useScrollTransform } from 'framer-motion';
 
 // --- PARTICLE BACKGROUND ---
 const ParticleBackground = ({ isDark }) => {
@@ -318,23 +318,31 @@ const App = () => {
   const openModal = (project) => {
     // Play popup sound
     if (popupSound.current) {
-      popupSound.current.currentTime = 0;
-      popupSound.current.play();
-    }
+  const sound = popupSound.current.cloneNode(); // instant clone
+  sound.playbackRate = 1.25;
+  sound.volume = 0.45;
+  sound.play();
+}
+
 
     setSelectedProject(project);
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
-    setIsModalOpen(false);
-    setTimeout(() => setSelectedProject(null), 300);
-  };
+  setIsModalOpen(false);
+};
+
 
   useEffect(() => {
-    popupSound.current = new Audio("/popup.mp3");
-    popupSound.current.volume = 0.45; // soft UI sound
-  }, []);
+  const audio = new Audio("/popup.mp3");
+  audio.volume = 0.45;
+  audio.preload = "auto";     // preload for instant play
+  audio.load();               // force browser decode
+
+  popupSound.current = audio;
+}, []);
+
 
   const projects = [
     {
@@ -351,7 +359,7 @@ const App = () => {
         "Community support forum with privacy controls",
         "Secure authentication and data encryption"
       ],
-      githubUrl: "https://github.com/NitheshNaik",
+      githubUrl: "https://github.com/NitheshNaik/SafeHer",
       liveUrl: "#"
     },
     {
@@ -368,7 +376,7 @@ const App = () => {
         "PDF certificate generation for winners",
         "Database optimization for 1000+ concurrent users"
       ],
-      githubUrl: "https://github.com/NitheshNaik",
+      githubUrl: "https://github.com/NitheshNaik/judgingApplication",
       liveUrl: "#"
     },
     {
@@ -417,12 +425,17 @@ const App = () => {
       </div>
 
       {/* Project Modal */}
-      <ProjectModal
-        project={selectedProject}
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        isDark={isDark}
-      />
+      <AnimatePresence mode="wait">
+  {isModalOpen && (
+    <ProjectModal
+      project={selectedProject}
+      isOpen={isModalOpen}
+      onClose={closeModal}
+      isDark={isDark}
+    />
+  )}
+</AnimatePresence>
+
 
       {/* Glass Navbar */}
       <nav className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-[100] w-[95%] md:w-[90%] max-w-4xl">
@@ -458,6 +471,7 @@ const App = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
+          className="mt-30"
         >
           <motion.h1
             className="text-5xl sm:text-6xl md:text-8xl font-black tracking-tighter mb-6"
@@ -484,9 +498,14 @@ const App = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            <a href="/Resume.pdf" className={`${glassClass} px-6 md:px-8 py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-white/10 transition`}>
-              <Download size={18} /> Resume
-            </a>
+            <a
+  href="/Resume.pdf"
+  download="Nithesh-Resume.pdf"
+  className={`${glassClass} px-6 md:px-8 py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-white/10 transition`}
+>
+  <Download size={18} /> Resume
+</a>
+
             <a href="#work" className={`${isDark ? 'bg-blue-600 text-white' : 'bg-blue-600 text-white'} px-6 md:px-8 py-3 rounded-xl hover:bg-blue-500 transition shadow-lg ${isDark ? 'shadow-blue-500/20' : 'shadow-blue-600/30'}`}>
               View Projects
             </a>
@@ -614,7 +633,7 @@ const App = () => {
           <div
             key={i}
             className="sticky"
-            style={{ top: `${175 + (i * 40)}px` }}
+            style={{ top: `${150 + (i * 40)}px` }}
           >
             <motion.div
               whileHover={{ scale: 0.98 }}
